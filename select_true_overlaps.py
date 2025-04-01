@@ -9,7 +9,7 @@ def select_true_overlaps(input_features, selecting_features):
         input_features: Input features to be selected (str)
         select_features: Selecting features (str)
 
-    Note: Be aware of which relationships the methods (contains, overlaps, within) apply to (e.g., polygon to polygon)
+    Note: Be aware of which relationships the methods (contains, overlaps, within) apply to (e.g., line to line)
 
     Returns:
         List of ObjectIDs (list)
@@ -27,9 +27,9 @@ def select_true_overlaps(input_features, selecting_features):
         overlap_type="INTERSECT",
         select_features=selecting_features,
         selection_type="NEW_SELECTION"
-    )
+        )
     
-    # Identify overlapping features
+    # List to store ObjectIDs of overlapping features
     overlapping_oids = []
 
     with arcpy.da.SearchCursor(input_layer, ["SHAPE@", "OID@"]) as target_cursor:
@@ -40,7 +40,7 @@ def select_true_overlaps(input_features, selecting_features):
 
             is_overlapping = False
 
-            with arcpy.da.SearchCursor(selecting_features, ["SHAPE@", "OID@"]) as join_cursor:
+            with arcpy.da.SearchCursor(selecting_features, ["SHAPE@"]) as join_cursor:
                 for join_row in join_cursor:
                     join_geom = join_row[0]  # Join geometry
 
@@ -53,11 +53,11 @@ def select_true_overlaps(input_features, selecting_features):
                     if is_overlapping:
                         break
 
-            # If the feature is only adjacent, mark its OID for removal
+            # If the feature overlaps, add it to list
             if is_overlapping:
                 overlapping_oids.append(target_row[1])
 
-    # Clear input_layer selection 
+    # Clear selection on input_layer
     arcpy.management.SelectLayerByAttribute(
         in_layer_or_view=input_layer,
         selection_type="CLEAR_SELECTION"
