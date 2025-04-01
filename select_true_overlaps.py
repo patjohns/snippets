@@ -5,11 +5,11 @@ def select_true_overlaps(input_features, selecting_features):
     Selects features from input_features that truly overlap select_features,
     meaning that adjacent features are NOT selected (as with ArcPy intersect selection relationship)
 
+    Note: Be aware of which relationships the methods (contains, overlaps, within) apply to (e.g., line to line)
+
     Parameters:
         input_features: Input features to be selected (str)
         select_features: Selecting features (str)
-
-    Note: Be aware of which relationships the methods (contains, overlaps, within) apply to (e.g., line to line)
 
     Returns:
         List of ObjectIDs (list)
