@@ -1,3 +1,6 @@
+import re
+from datetime import datetime as dt
+
 def strip_time_from_date(input_date: str) -> str:
     try:
         # Try parsing with 12-hour format (with AM/PM)
